@@ -31,8 +31,6 @@ async function getAuthSheets(){
 async function getSpreadsheetData() {
 
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
-    //console.log(googleSheets.spreadsheets); 
-    //console.log(auth);
 
     const { data } = await googleSheets.spreadsheets.values.get({
         spreadsheetId,
@@ -40,11 +38,8 @@ async function getSpreadsheetData() {
     });
 
     const values = data.values; 
-    console.log(values);
     const rows = values.slice(2); 
     const classHours = parseInt(values[0][0].split(":")[1]); 
-
-    //console.log(classHours);
 
     if (rows.length) {
 
@@ -54,15 +49,10 @@ async function getSpreadsheetData() {
             const p2 = parseFloat(row[4]);
             const p3 = parseFloat(row[5]); 
         
-            console.log("Dados do aluno:", { studentAbsence, p1, p2, p3 });
-        
             const media = (p1 + p2 + p3) / 3;
             const absentPercentage = (studentAbsence / classHours) * 100;
         
-            console.log("Média:", media);
-            console.log("Percentual de Faltas:", absentPercentage);
-        
-            let naf = 0; // Inicialize o naf como 0
+            let naf = 0;
         
             let situation;
             if (absentPercentage > 25) {
@@ -71,20 +61,14 @@ async function getSpreadsheetData() {
                 situation = "Reprovado por Nota!";
             } else if (media >= 50 && media < 70) {
                 situation = "Exame final!";
-                // Calcular naf apenas para a situação de "Exame final!"
-                naf = Math.ceil(100 - media); // Calcula o naf e arredonda para cima
+                // Calculate naf only for the "Final exam!" situation
+                naf = Math.ceil(100 - media); 
             } else {
                 situation = "Aprovado!"; 
             }
         
-            console.log("Situação:", situation);
-            console.log("NAF:", naf);
-        
             return [situation, naf];
         });
-
-        console.log(data.values);
-        console.log(newData);
 
         await googleSheets.spreadsheets.values.update({
             spreadsheetId,
