@@ -1,9 +1,7 @@
 const {google} = require('googleapis');
 const { sheets } = require('googleapis/build/src/apis/sheets');
 
-//const app = express();
-
-//autentication pra acessar API
+//autentication to acess API
 async function getAuthSheets(){
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentials.json",
@@ -12,7 +10,7 @@ async function getAuthSheets(){
 
     const client = await auth.getClient();
 
-    //conexão com google sheets
+    //connecting with google sheets
     const googleSheets = google.sheets({
         version: "v4",
         auth: client
